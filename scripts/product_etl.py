@@ -40,6 +40,7 @@ def main():
     )
 
     if df_existing_products.count() > 0:
+        df_existing_products.show(1)
         df_to_update = df_current_product.alias("target").join(
             df_existing_products,
             (col("target.product_id") == df_existing_products.id) &
@@ -53,10 +54,16 @@ def main():
             lit(current_timestamp()).alias("valid_to"),
             lit(False).alias("is_current")
         )
+        manual_update_table(df_to_update,'DIM_PRODUCT','product_key',warehouse_properties)
 
-        manual_update_table(df_to_update,'DIM_PRODUCT',warehouse_properties)
-
-        df_to_insert_existing = df_existing_products.select(
+        df_current_product = read_jdbc_table(spark, 'DIM_PRODUCT', warehouse_properties)
+        # Identify new products
+        df_new_products = df_source.join(
+            df_current_product.filter(col("is_current") == True),
+            df_source.id == df_current_product.product_id,
+            "left_anti"
+        )
+        df_to_insert = df_new_products.select(
             col("id").alias("product_id"),
             col("name").alias("product_name"),
             col("price").alias("current_price"),
@@ -65,8 +72,7 @@ def main():
             lit(True).alias("is_current")
         )
 
-        write_jdbc_table(df_to_insert_existing, 'DIM_PRODUCT', warehouse_properties)
-
+        write_jdbc_table(df_to_insert, 'DIM_PRODUCT', warehouse_properties)
 
     spark.stop()
 
