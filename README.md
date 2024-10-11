@@ -155,6 +155,4 @@ project_root/
 - Implement data quality checks
 - Add more comprehensive error handling and logging
 - Optimize Spark jobs for better performance
-- Implement a solution for handling late-arriving data
-
-For more information or to contribute to this project, please contact [Your Name/Team].
+- Implement a solution for handling late-arriving data.
