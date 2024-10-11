@@ -123,8 +123,9 @@ graph TD
 4. Run `docker-compose up` to start the Airflow and Spark environments
 5. Access the Airflow web interface at `http://localhost:8081` (default username and password is `airflow`)
 6. Access the Spark Master web interface at `http://localhost:8080`
-7. Set up the necessary connection in Airflow for spark cluster (set `host` for **spark_default** `spark://master`)
+7. Set up the necessary connection in Airflow for spark cluster (set `host` for **spark_default** `spark://spark-master`)
 8. Enable and trigger the DAGs for the ETL processes
+9. You can see and manage both old and new databases with pgadmin4 running on `http://localhost:5050`
 
 ## Project Structure
 
